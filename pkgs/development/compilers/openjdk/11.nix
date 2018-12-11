@@ -51,36 +51,35 @@ let
     preConfigure = ''
       chmod +x configure
       substituteInPlace configure --replace /bin/bash "${bash}/bin/bash"
-
-      configureFlagsArray=(
-        "--with-boot-jdk=${bootjdk.home}"
-        "--with-update-version=${major}${update}"
-        "--with-build-number=${build}"
-        "--with-milestone=fcs"
-        "--enable-unlimited-crypto"
-        "--disable-debug-symbols"
-        "--with-zlib=system"
-        "--with-giflib=system"
-        "--with-stdc++lib=dynamic"
-
-        # glibc 2.24 deprecated readdir_r so we need this
-        # See https://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg49006.html
-        "--with-extra-cflags=-Wno-error=deprecated-declarations -Wno-error=format-contains-nul -Wno-error=unused-result"
     ''
-    + lib.optionalString (architecture == "amd64") "\"--with-jvm-features=zgc\""
-    + lib.optionalString minimal "\"--enable-headless-only\""
-    + ");"
     # https://bugzilla.redhat.com/show_bug.cgi?id=1306558
     # https://github.com/JetBrains/jdk8u/commit/eaa5e0711a43d64874111254d74893fa299d5716
-    + stdenv.lib.optionalString stdenv.cc.isGNU ''
+    + lib.optionalString stdenv.cc.isGNU ''
       NIX_CFLAGS_COMPILE+=" -fno-lifetime-dse -fno-delete-null-pointer-checks -std=gnu++98 -Wno-error"
     '';
 
-    NIX_LDFLAGS= lib.optionals (!minimal) [
+    NIX_LDFLAGS = lib.optionals (!minimal) [
       "-lfontconfig" "-lcups" "-lXinerama" "-lXrandr" "-lmagic"
     ] ++ lib.optionals (!minimal && enableGnome2) [
       "-lgtk-3" "-lgio-2.0" "-lgnomevfs-2" "-lgconf-2"
     ];
+
+    configureFlags = [
+      "--with-boot-jdk=${bootjdk.home}"
+      "--with-update-version=${major}${update}"
+      "--with-build-number=${build}"
+      "--with-milestone=fcs"
+      "--enable-unlimited-crypto"
+      "--disable-debug-symbols"
+      "--with-zlib=system"
+      "--with-giflib=system"
+      "--with-stdc++lib=dynamic"
+
+      # glibc 2.24 deprecated readdir_r so we need this
+      # See https://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg49006.html
+      "--with-extra-cflags=\"-Wno-error=deprecated-declarations -Wno-error=format-contains-nul -Wno-error=unused-result\""
+    ] ++ lib.optional (architecture == "amd64") "--with-jvm-features=zgc"
+      ++ lib.optional minimal "--enable-headless-only";
 
     buildFlags = [ "all" ];
 
