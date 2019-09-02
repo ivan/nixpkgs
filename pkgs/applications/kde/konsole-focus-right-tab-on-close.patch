@@ -1,0 +1,14 @@
+diff --git a/src/ViewManager.cpp b/src/ViewManager.cpp
+index ebceaeed..7e31fbea 100644
+--- a/src/ViewManager.cpp
++++ b/src/ViewManager.cpp
+@@ -507,8 +507,7 @@ void ViewManager::focusAnotherTerminal(ViewSplitter *toplevelSplitter)
+             }
+         }
+     } else if (_terminalDisplayHistory.count() >= 1) {
+-        // Give focus to the last used terminal tab
+-        switchToTerminalDisplay(_terminalDisplayHistory[0]);
++        // Accept the default QTabBar behavior of focusing to the tab to the right
+     }
+ }
+ 

@@ -21,9 +21,14 @@ mkDerivation {
   ];
 
   propagatedUserEnvPkgs = [ (lib.getBin kinit) ];
+
+  patches = [
+    ./konsole-focus-right-tab-on-close.patch
+  ];
   postPatch = ''
     # Use a more visible color to indicate tab activity
     sed -i -r 's/const QColor activityColor = .*/const QColor activityColor = QColor(209, 25, 25);/g' src/ViewContainer.cpp
   '';
+
   enableParallelBuilding = true;
 }
