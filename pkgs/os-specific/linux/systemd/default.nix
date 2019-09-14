@@ -31,6 +31,12 @@ in stdenv.mkDerivation {
     sha256 = "0ywaq5jfy177k4q5hwr43v66sz62l1bqhgyxs2vk9m1d5kvrjwk6";
   };
 
+  postPatch = ''
+    # Replace 256-color #185 yellow, which is hard to read in light terminals
+    # and cannot be customized: https://github.com/systemd/systemd/issues/13561
+    sed -i -r 's/#define ANSI_HIGHLIGHT_YELLOW\s+"\\x1B\[0;1;38;5;185m"/#define ANSI_HIGHLIGHT_YELLOW "\\x1B[0;1;33m"/g' src/basic/terminal-util.h
+  '';
+
   outputs = [ "out" "lib" "man" "dev" ];
 
   nativeBuildInputs =
