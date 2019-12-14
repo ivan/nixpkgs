@@ -23,7 +23,6 @@
 , libva ? null # useVaapi
 
 # package customization
-, enableNaCl ? false
 , useVaapi ? false
 , gnomeSupport ? false, gnome ? null
 , gnomeKeyringSupport ? false, libgnome-keyring3 ? null
@@ -228,7 +227,6 @@ let
       use_sysroot = false;
       use_gnome_keyring = gnomeKeyringSupport;
       use_gio = gnomeSupport;
-      enable_nacl = enableNaCl;
       enable_widevine = true;
       use_cups = cupsSupport;
 
