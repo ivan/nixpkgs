@@ -49,5 +49,9 @@ mkDerivation {
     sed -i -r 's/const QColor activityColor = .*/const QColor activityColor = QColor(209, 25, 25);/g' src/ViewContainer.cpp
   '';
 
+  NIX_CFLAGS_COMPILE = [ "-flto=full" ];
+  NIX_CXXFLAGS_COMPILE = [ "-flto=full" ];
+  NIX_LDFLAGS = [ "-flto=full" ];
+
   enableParallelBuilding = true;
 }
